@@ -1,0 +1,356 @@
+From c0f7c25756005fdd1cc6c35f0a1cdabf0d402829 Mon Sep 17 00:00:00 2001
+From: Sietse van der Molen <sietse.vandermolen@greenbird.com>
+Date: Thu, 7 May 2020 21:28:13 +0200
+Subject: [PATCH] first commit
+
+---
+ :w                                            | 149 ++++++++++++++++++
+ assets/_main.scss                             |  53 +++++++
+ assets/_markdown.scss                         |  23 +++
+ assets/_shortcodes.scss                       |   1 -
+ layouts/404.html                              |   2 +-
+ .../partials/docs/inject/content-before.html  |   6 +
+ layouts/posts/list.html                       |  26 ++-
+ 7 files changed, 253 insertions(+), 7 deletions(-)
+ create mode 100644 :w
+
+diff --git a/:w b/:w
+new file mode 100644
+index 0000000..fb01858
+--- /dev/null
++++ b/:w
+@@ -0,0 +1,149 @@
++@import 'variables';
++
++.markdown {
++  line-height: 1.6em;
++
++  // remove padding at the beginning of page
++  > :first-child {
++    margin-top: 0;
++  }
++
++  h1, h2, h3, h4, h5, h6 {
++    font-weight: normal;
++    line-height: 1em;
++    margin-top: 1.5em;
++    margin-bottom: $padding-16;
++  }
++
++  h4, h5, h6 {
++    font-weight: bolder;
++  }
++
++  h5 {
++    font-size: .875em;
++  }
++
++  h6 {
++    font-size: .75em;
++  }
++
++  b, optgroup, strong {
++    font-weight: bolder;
++  }
++
++  a {
++    text-decoration: none;
++
++    &:hover {
++      text-decoration: underline;
++    }
++  }
++
++  img {
++    max-width: 100%;
++  }
++
++  code {
++    padding: 0 $padding-4;
++    background: $gray-200;
++    border-radius: $border-radius;
++    font-size: .875em;
++  }
++
++  pre {
++    padding: $padding-16;
++    background: $gray-100;
++    border-radius: $border-radius;
++    overflow-x: auto;
++
++    code {
++      padding: 0;
++      background: none;
++    }
++  }
++
++  blockquote {
++    margin: $padding-16 0;
++    padding: $padding-8 $padding-16 $padding-8 ($padding-16 - $padding-4); //to keep total left space 16dp
++
++    border-left: $padding-4 solid $gray-200;
++    border-radius: $border-radius;
++
++    :first-child { margin-top: 0; }
++    :last-child { margin-bottom: 0; }
++  }
++
++  table {
++    overflow: auto;
++    display: block;
++    border-spacing: 0;
++    border-collapse: collapse;
++    margin-top: $padding-16;
++    margin-bottom: $padding-16;
++
++    tr th, tr td {
++      padding: $padding-8 $padding-16;
++      border: $padding-1 solid $gray-200;
++    }
++
++    tr:nth-child(2n) {
++      background: $gray-100;
++    }
++  }
++
++  hr {
++    height: $padding-1;
++    border: none;
++    background: $gray-200;
++  }
++
++  ul, ol {
++    padding-left: $padding-16 * 2;
++  }
++
++  dl {
++    dt {
++      font-weight: bolder;
++      margin-top: $padding-16;
++    }
++
++    dd {
++      margin-left: $padding-16 * 2;
++    }
++  }
++
++  // Special case for highlighted code with line numbers
++  .highlight table tr {
++    td:nth-child(1) pre {
++      margin: 0;
++      padding-right: 0;
++    }
++    td:nth-child(2) pre {
++      margin: 0;
++      padding-left: 0;
++    }
++  }
++
++  figure {
++    margin: auto;
++    width: 50%;
++    border: 1px solid lightgrey;
++    padding: 10px;
++  }
++
++  figure .left {
++    float: left;
++    background-color: red;
++  }
++
++  details {
++    padding: $padding-16;
++    border: $padding-1 solid $gray-200;
++    border-radius: $border-radius;
++
++    summary {
++      line-height: 1;
++      cursor: pointer;
++    }
++  }
++}
+diff --git a/assets/_main.scss b/assets/_main.scss
+index a33112c..7d99e14 100644
+--- a/assets/_main.scss
++++ b/assets/_main.scss
+@@ -71,6 +71,36 @@ aside nav ul {
+   }
+ }
+ 
++/* The alert message box */
++.alert {
++  padding: 20px;
++  background-color: #FF7F50; /* Red */
++  color: white;
++  margin-bottom: 15px;
++}
++
++.alert a {
++  color: white;
++  text-decoration: underline;
++}
++
++/* The close button */
++.closebtn {
++  margin-left: 15px;
++  color: white;
++  font-weight: bold;
++  float: right;
++  font-size: 22px;
++  line-height: 20px;
++  cursor: pointer;
++  transition: 0.3s;
++}
++
++/* When moving the mouse over the close button */
++.closebtn:hover {
++  color: black;
++}
++
+ ul.pagination {
+   display: flex;
+   justify-content: center;
+@@ -155,6 +185,29 @@ ul.pagination {
+   margin-bottom: $padding-16 * 3;
+ }
+ 
++.book-page th {
++  display: none;
++}
++
++.book-post .post-summary {
++  display: flex;
++  flex-wrap: wrap;
++  justify-content: center
++}
++
++.book-post .summaryText {
++  flex: 1;
++  margin: 12px;
++}
++
++.book-post .summaryPic {
++  background-color: red;
++  flex: 0 0 275px;
++  height: 200px;
++  width: 275px;
++  margin: 12px;
++}
++
+ .book-header {
+   display: none;
+   margin-bottom: $padding-16;
+diff --git a/assets/_markdown.scss b/assets/_markdown.scss
+index 3d54a0c..0f7e63c 100644
+--- a/assets/_markdown.scss
++++ b/assets/_markdown.scss
+@@ -124,6 +124,29 @@
+     }
+   }
+ 
++  figure {
++    margin: auto;
++    width: 50%;
++    font-style: italic;
++    font-size: 0.875em; /* 14px/16=0.875em */
++
++  }.left {
++    float: left;
++    padding-right: 1em;
++    margin-right: 1em;
++  }.right {
++    float: right;
++    padding-left: 1em;
++    margin-left: 1em;
++  }
++
++  .sidebysidepics {
++    display: flex;
++  }
++  .sidebysidepics figure {
++    margin: 1em;
++  }
++
+   details {
+     padding: $padding-16;
+     border: $padding-1 solid $gray-200;
+diff --git a/assets/_shortcodes.scss b/assets/_shortcodes.scss
+index 7d2c747..59937b5 100644
+--- a/assets/_shortcodes.scss
++++ b/assets/_shortcodes.scss
+@@ -77,7 +77,6 @@
+ 
+   > div {
+     margin: $padding-16 0;
+-    min-width: $body-min-width / 2;
+     padding: 0 $padding-16;
+   }
+ }
+diff --git a/layouts/404.html b/layouts/404.html
+index 1068ba6..557559a 100644
+--- a/layouts/404.html
++++ b/layouts/404.html
+@@ -18,4 +18,4 @@
+     {{ template "_internal/google_analytics_async.html" . }}
+   </body>
+ 
+-</html>
+\ No newline at end of file
++</html>
+diff --git a/layouts/partials/docs/inject/content-before.html b/layouts/partials/docs/inject/content-before.html
+index e69de29..252fc56 100644
+--- a/layouts/partials/docs/inject/content-before.html
++++ b/layouts/partials/docs/inject/content-before.html
+@@ -0,0 +1,6 @@
++{{ if (isset .Params "source")}}
++<div class="alert">
++  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
++  I did not write most of this. This is based on <a href="{{ .Params.sourceUrl }}]" rel="noreferrer">{{ .Params.source}}</a>, you should read that. This is just my local copy.
++</div>
++{{ end }}
+diff --git a/layouts/posts/list.html b/layouts/posts/list.html
+index 6115fae..c4d3664 100644
+--- a/layouts/posts/list.html
++++ b/layouts/posts/list.html
+@@ -1,17 +1,33 @@
+ {{ define "main" }}
+   {{ $paginator := .Paginate (where .Pages "Params.hidden" "ne" true) }}
+-  {{ range sort .Paginator.Pages }}
++  {{ range $index, $element := .Paginator.Pages }}
+   <article class="markdown book-post">
++    {{ partial "docs/post-meta" . }}
++    <div class="post-summary">
++      {{if (modBool $index 2)}}
++      <img class="summaryPic" src="https://placekitten.com/g/275/250" />
++      {{end}}
++
++      <div class="summaryText">
+     <h2>
+       <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+     </h2>
+-    {{ partial "docs/post-meta" . }}
+-    <p>
+       {{- .Summary -}}
+       {{ if .Truncated }}
+-        <a href="{{ .RelPermalink }}">...</a>
++        <a href="{{ .RelPermalink }}">…</a>
+       {{ end }}
+-    </p>
++      </div>
++
++      {{if not (modBool $index 2)}}
++	  <img class="summaryPic" src="https://placekitten.com/g/275/250" />
++	  <!--
++          {{ with .Resources.GetMatch ("images/summary.png")}}
++              <img class="summaryPic" src="{{.Permalink}}/" />
++          {{end}}
++	  -->
++      {{end}}
++      <br style="clear: both;" />
++    </div>
+   </article>
+   {{ end }}
+ 
+-- 
+2.24.1 (Apple Git-126)
+

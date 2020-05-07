@@ -10,3 +10,9 @@
   I did not write most of this. This is based on <a href="{{ .Params.sourceUrl }}]" rel="noreferrer">{{ .Params.source}}</a>, you should read that. This is just my local copy.
 </div>
 {{ end }}
+{{ if (isset .Params "source")}}
+<div class="alert">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+  I did not write most of this. This is based on <a href="{{ .Params.sourceUrl }}]" rel="noreferrer">{{ .Params.source}}</a>, you should read that. This is just my local copy.
+</div>
+{{ end }}
